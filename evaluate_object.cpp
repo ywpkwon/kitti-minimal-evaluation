@@ -169,7 +169,7 @@ vector<tDetection> loadDetections(string file_name, bool &compute_aos,
             eval_image[c] = true;
           if (!eval_ground[c] && d.t1 != -1000 && d.t3 != -1000 && d.w > 0 && d.l > 0)
             eval_ground[c] = true;
-          if (!eval_3d[c] && d.t1 != -1000 && d.t2 != -1000 && d.t3 != -1000 && d.h > 0 && d.w > 0 && d.l > 0) 
+          if (!eval_3d[c] && d.t1 != -1000 && d.t2 != -1000 && d.t3 != -1000 && d.h > 0 && d.w > 0 && d.l > 0)
             eval_3d[c] = true;
           break;
         }
@@ -179,7 +179,7 @@ vector<tDetection> loadDetections(string file_name, bool &compute_aos,
       cout << "invalid structure" << endl;
     }
   }
-  
+
   fclose(fp);
   success = true;
   return detections;
@@ -450,9 +450,9 @@ void cleanData(CLASSES current_class, const vector<tGroundtruth> &gt, const vect
       valid_class = 1;
     else
       valid_class = -1;
-    
+
     int32_t height = fabs(det[i].box.y1 - det[i].box.y2);
-    
+
     // set ignored vector for detections
     if(height<MIN_HEIGHT[difficulty])
       ignored_det.push_back(1);
@@ -641,7 +641,7 @@ bool eval_class (FILE *fp_det, FILE *fp_ori, CLASSES current_class,
   vector< vector<int32_t> > ignored_gt, ignored_det;  // index of ignored gt detection for current class/difficulty
   vector< vector<tGroundtruth> > dontcare;            // index of dontcare areas, included in ground truth
 
-  cout << "eval class" << endl;
+  // cout << "eval class" << endl;
   // for all test images do
   for (int32_t i=0; i<groundtruth.size(); i++){
 
@@ -708,7 +708,7 @@ bool eval_class (FILE *fp_det, FILE *fp_ori, CLASSES current_class,
 
   // filter precision and AOS using max_{i..end}(precision)
   for (int32_t i=0; i<thresholds.size(); i++){
-    cout << "c4: " << i << endl;
+    // cout << "c4: " << i << endl;
     precision[i] = *max_element(precision.begin()+i, precision.end());
     if(compute_aos)
       aos[i] = *max_element(aos.begin()+i, aos.end());
@@ -723,12 +723,38 @@ void saveAndPlotPlots(string dir_name,string file_name,string obj_type,vector<do
 
   char command[1024];
 
+  float easy = 0.0;
+  float moderate = 0.0;
+  float difficult = 0.0;
+
   // save plot data to file
   FILE *fp = fopen((dir_name + "/" + file_name + ".txt").c_str(),"w");
   printf("save %s\n", (dir_name + "/" + file_name + ".txt").c_str());
   for (int32_t i=0; i<(int)N_SAMPLE_PTS; i++)
     fprintf(fp,"%f %f %f %f\n",(double)i/(N_SAMPLE_PTS-1.0),vals[0][i],vals[1][i],vals[2][i]);
   fclose(fp);
+
+
+  int32_t cnt = 0;
+
+  if(file_name == "car_detection_3d")
+    cout << "Car 3D Detection" << endl;
+    for (cnt=0; cnt<(int)N_SAMPLE_PTS; cnt=cnt+4)
+    {
+      easy += (float)vals[0][cnt];
+      moderate += (float)vals[1][cnt];
+      difficult += (float)vals[2][cnt];
+    }
+      // cout << "moderate: " << vals[1][cnt] << ", sum :" << moderate << endl;
+      // cout << "MODERATE aa:" << moderate << endl;
+
+      // easy += vals[0][i];
+      // moderate += vals[1][i];
+      // difficult += vals[2][i];
+
+  cout << "EASY:" << easy/11.0 << endl;
+  cout << "MODERATE mAP:" << moderate/11.0 << endl;
+  cout << "DIFFICULT:" << difficult/11.0 << endl;
 
   // create png + eps
   for (int32_t j=0; j<2; j++) {
@@ -790,7 +816,7 @@ bool eval(string result_sha){
   // ground truth and result directories
   string gt_label_file  = "validset.txt";
   string gt_dir         = "data/object/training/label_2";
-  string result_dir     = "result/" + result_sha;
+  string result_dir     = result_sha;
   string plot_dir       = result_dir + "/plot";
 
   // create output directories
@@ -813,7 +839,7 @@ bool eval(string result_sha){
   // holds all ground truth (ignored ground truth is indicated by an index vector
 
 
-  cout << "Loading detection..." << endl;
+  cout << "Loading detection: " +  gt_label_file<< endl;
   FILE *label_fp = fopen(gt_label_file.c_str(),"r");
   if (!label_fp) {
     cout << "Error: loading label..." << endl;
@@ -868,7 +894,7 @@ bool eval(string result_sha){
     CLASSES cls = (CLASSES)c;
     //mail->msg("Checking 2D evaluation (%s) ...", CLASS_NAMES[c].c_str());
     if (eval_image[c]) {
-      cout << "Starting 2D evaluation" << CLASS_NAMES[c].c_str() << "..." << endl;
+      cout << "Starting 2D evaluation: " << CLASS_NAMES[c].c_str() << "..." << endl;
       // mail->msg("Starting 2D evaluation (%s) ...", CLASS_NAMES[c].c_str());
       fp_det = fopen((result_dir + "/stats_" + CLASS_NAMES[c] + "_detection.txt").c_str(), "w");
       if(compute_aos)
@@ -944,6 +970,11 @@ bool eval(string result_sha){
   // success
   return true;
 }
+
+
+// g++ -O3 -DNDEBUG -o evaluate_object evaluate_object.cpp
+
+// usage: in helpers directory: ./evaluate_object /results
 
 int32_t main (int32_t argc,char *argv[]) {
 
