@@ -752,18 +752,17 @@ void saveAndPlotPlots(string dir_name,string file_name,string obj_type,vector<do
       // easy += vals[0][i];
       // moderate += vals[1][i];
       // difficult += vals[2][i];
-  cout << "---------------------------------------------------" << endl;
-  cout << "EASY  : ";
+  cout << "EAS : ";
   for (cnt=0; cnt<(int)N_SAMPLE_PTS; cnt=cnt+4)
       printf("%.3f ", (float)vals[0][cnt]);
   printf("=> (%f) \n", easy/11.0);
 
-  cout << "MODER : ";
+  cout << "MOD : ";
   for (cnt=0; cnt<(int)N_SAMPLE_PTS; cnt=cnt+4)
       printf("%.3f ", (float)vals[1][cnt]);
   printf("=> (%f) \n", moderate/11.0);
 
-  cout << "DIFFI : ";
+  cout << "DIF : ";
   for (cnt=0; cnt<(int)N_SAMPLE_PTS; cnt=cnt+4)
       printf("%.3f ", (float)vals[2][cnt]);
   printf("=> (%f) \n", difficult/11.0);
