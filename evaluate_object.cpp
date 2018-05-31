@@ -147,10 +147,11 @@ vector<tDetection> loadDetections(string file_name, bool &compute_aos,
     tDetection d;
     double trash;
     char str[2048];
-    if (fscanf(fp, "%s %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+    int read_cnt = fscanf(fp, "%s %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
                    str, &trash, &trash, &d.box.alpha, &d.box.x1, &d.box.y1,
                    &d.box.x2, &d.box.y2, &d.h, &d.w, &d.l, &d.t1, &d.t2, &d.t3,
-                   &d.ry, &d.thresh)==16) {
+                   &d.ry, &d.thresh);
+    if (read_cnt==16) {
 
       // cout << "valid" << endl;
 
@@ -175,8 +176,8 @@ vector<tDetection> loadDetections(string file_name, bool &compute_aos,
         }
       }
     }
-    else{
-      cout << "invalid structure" << endl;
+    else if (read_cnt!=-1){
+      cout << "invalid line" << endl;
     }
   }
 
@@ -857,8 +858,8 @@ bool eval(string result_sha){
 
     // file name
     // char file_name[256];
-    sprintf(file_name,"%s.txt",load_num);
-    cout << "Loaded:" << file_name << endl;
+    sprintf(file_name, "%s.txt", load_num);
+    // cout << "Loaded:" << file_name << endl;
 
     // read ground truth and result poses
     bool gt_success,det_success;
