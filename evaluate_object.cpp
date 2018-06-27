@@ -137,7 +137,7 @@ vector<tDetection> loadDetections(string file_name, bool &compute_aos,
   // holds all detections (ignored detections are indicated by an index vector
   vector<tDetection> detections;
 
-  cout << "detection: " <<file_name<<endl;
+  // cout << "detection: " <<file_name<<endl;
   FILE *fp = fopen(file_name.c_str(),"r");
   if (!fp) {
     success = false;
@@ -864,7 +864,7 @@ bool eval(string result_sha){
     char load_num[256];
     char file_name[256];
     if (fscanf(label_fp, "%s", load_num)==1) {
-      cout << "Loaded:" << load_num << endl;
+      // cout << "Loaded:" << load_num << endl;
     }
 
     // file name
@@ -885,18 +885,11 @@ bool eval(string result_sha){
       cout << "ERROR: Couldn't read: " << file_name << " of ground truth." << endl;
       return false;
     }
-    else{
-      cout << "Ground Truth Loaded" << endl;
-    }
     if (!det_success) {
       cout << "ERROR: Couldn't read: " << file_name << " of detection file." << endl;
       return false;
     }
-    else{
-      cout << "Detection Loaded" << endl;
-    }
   }
-  cout << "Done" << endl;
 
   // holds pointers for result files
   FILE *fp_det=0, *fp_ori=0;
