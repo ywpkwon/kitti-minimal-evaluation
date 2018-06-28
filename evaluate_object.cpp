@@ -918,8 +918,6 @@ bool eval(string result_sha){
         saveAndPlotPlots(plot_dir, CLASS_NAMES[c] + "_orientation", CLASS_NAMES[c], aos, 1);
         fclose(fp_ori);
       }
-      cout << "Done 1" << endl;
-      // mail->msg("  done.");
     }
   }
 
@@ -944,8 +942,6 @@ bool eval(string result_sha){
       }
       fclose(fp_det);
       saveAndPlotPlots(plot_dir, CLASS_NAMES[c] + "_detection_ground", CLASS_NAMES[c], precision, 0);
-      cout << "Done 2" << endl;
-      // mail->msg("  done.");
     }
   }
 
@@ -967,8 +963,6 @@ bool eval(string result_sha){
       }
       fclose(fp_det);
       saveAndPlotPlots(plot_dir, CLASS_NAMES[c] + "_detection_3d", CLASS_NAMES[c], precision, 0);
-      cout << "Done 3" << endl;
-      // mail->msg("  done.");
     }
   }
 
