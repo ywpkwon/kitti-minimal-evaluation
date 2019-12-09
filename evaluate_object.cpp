@@ -827,7 +827,7 @@ bool eval(string result_sha){
 
   // ground truth and result directories
   string gt_label_file  = "validset.txt";
-  string gt_dir         = "./kitti/training/label_2";
+  string gt_dir         = "./kitti/object/training/label_2";
   string result_dir     = result_sha;
   string plot_dir       = result_dir + "/plot";
 
